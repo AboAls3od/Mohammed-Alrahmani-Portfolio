@@ -371,11 +371,40 @@ export class ContactComponent implements OnInit {
       return;
     }
 
-    // ✅ بناء رسالة الواتساب
+    // ✅ 1. حفظ في Google Sheets (في الخلفية)
+    this.saveToSheet();
+
+    // ✅ 2. فتح واتساب مع البيانات
     this.openWhatsApp();
 
     this.submitted.set(true);
     requestAnimationFrame(() => this.successEl?.nativeElement?.focus());
+  }
+
+  private saveToSheet(): void {
+    // ← ضع رابط الـ Web App من Google Apps Script هنا
+    const SHEET_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+
+    if (SHEET_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return; // تخطَّ إذا لم يُضبط بعد
+
+    const payload = {
+      name:         this.form.name.trim(),
+      phone:        this.form.phone.trim(),
+      email:        this.form.email.trim(),
+      projectName:  this.form.projectName.trim(),
+      projectField: this.form.projectField.trim(),
+      city:         this.form.city.trim(),
+      website:      this.form.website.trim(),
+      problem:      this.form.problem.trim(),
+      goal:         this.form.goal.trim(),
+    };
+
+    fetch(SHEET_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).catch(() => {
+      // خطأ صامت — لا يؤثر على تجربة المستخدم
+    });
   }
 
   private openWhatsApp(): void {
@@ -401,8 +430,8 @@ export class ContactComponent implements OnInit {
     .filter((l) => l !== null)
     .join('\n');
 
-    // رقم واتساب محمد الرحماني — عدّله حسب رقمك الحقيقي
-    const phone = '966500000000'; // ← ضع رقم الواتساب هنا بدون + (مثال: 966512345678)
+    // ← ضع رقم واتساب محمد الرحماني هنا بدون + (مثال: 966512345678)
+    const phone = '966500000000';
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(lines)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   }
