@@ -1,171 +1,338 @@
-import { Component, inject, signal, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RevealDirective } from '../../directives/reveal.directive';
 import { PortfolioDataService } from '../../services/portfolio-data.service';
+import { ScrollService } from '../../services/scroll.service';
 
-interface FormValues {
+interface ConsultForm {
   name: string;
+  phone: string;
   email: string;
-  company: string;
-  message: string;
+  projectName: string;
+  projectField: string;
+  city: string;
+  website: string;
+  problem: string;
+  goal: string;
+  captchaAnswer: string;
 }
 
-type FormErrors = Partial<Record<keyof FormValues, string>>;
+type FormErrors = Partial<Record<keyof ConsultForm, string>>;
 
 @Component({
   selector: 'app-contact',
   standalone: true,
   imports: [CommonModule, FormsModule, RevealDirective],
   template: `
-    <section class="section contact-section" id="contact">
-      <div class="shell contact-grid">
+    <!-- Consultation Section -->
+    <section class="section consult-section" id="contact">
+      <div class="shell">
 
-        <!-- Left: Info -->
-        <div class="contact-copy" appReveal>
-          <span class="section-kicker">٠٦ / لنتحدث</span>
-          <h2 class="section-title">هل هناك فرصة تستحق أن ندرسها؟</h2>
-          <p>احجز استشارة أولية مجانية. أخبرني عن مشروعك، وسأعود إليك بفكرة أولية عن المسار الأنسب.</p>
-
-          <div class="contact-details">
-            <div class="contact-detail">
-              <span>البريد الإلكتروني</span>
-              <strong>hello&#64;mohammed-alrahmani.com</strong>
-            </div>
-            <div class="contact-detail">
-              <span>الموقع</span>
-              <strong>الرياض، المملكة العربية السعودية</strong>
-            </div>
+        <!-- Section Head -->
+        <div class="section-head" appReveal>
+          <div>
+            <span class="section-kicker">٠٦ / الاستشارة</span>
+            <h2 class="section-title">لديك مشروع وتحتاج رأياً تسويقياً؟</h2>
           </div>
+          <p class="section-desc">
+            إذا كنت محتاراً في طريقة التسويق، أو لا تعرف من أين تبدأ، أو تنفق على الإعلانات دون نتائج واضحة — يمكنني مساعدتك.
+          </p>
+        </div>
 
-          <div class="social-links">
+        <!-- CTA Card -->
+        <div class="consult-cta-card" appReveal [appReveal]="100">
+          <div class="consult-cta-text">
+            <h3>احجز استشارتك الآن مجاناً</h3>
+            <p>أحلل وضعك وأحدد الخطوات التي تحتاجها</p>
+          </div>
+          <button class="btn btn-primary btn-lg" id="open-consult-btn" (click)="openModal()">
+            احجز استشارتك الآن مجاناً
+            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </button>
+        </div>
+
+        <!-- Contact Details -->
+        <div class="contact-details-row" appReveal [appReveal]="200">
+          <div class="social-links-grid">
             @for (link of data.socialLinks; track link.label) {
-              <a [href]="link.url" target="_blank" rel="noreferrer noopener">{{ link.label }}</a>
+              <a [href]="link.url" target="_blank" rel="noreferrer noopener" class="social-chip">
+                <span class="social-dot"></span>
+                {{ link.label }}
+              </a>
             }
           </div>
         </div>
 
-        <!-- Right: Form -->
-        <div class="contact-form" appReveal [appReveal]="200">
+      </div>
+    </section>
 
+    <!-- Modal Overlay -->
+    @if (modalOpen()) {
+      <div class="modal-overlay" role="dialog" aria-modal="true" aria-label="نموذج حجز الاستشارة" (click)="onOverlayClick($event)" #overlayEl>
+        <div class="modal-card" #modalCard>
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <div>
+              <h2 class="modal-title">احجز استشارتك المجانية</h2>
+              <p class="modal-subtitle">أحتاج بعض المعلومات عن مشروعك لأتمكن من مساعدتك</p>
+            </div>
+            <button class="modal-close" (click)="closeModal()" aria-label="إغلاق النموذج">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <!-- Success State -->
           @if (submitted()) {
-            <!-- Success State -->
-            <div class="form-success" role="status" tabindex="-1" #successEl>
-              <div class="check-icon">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <div class="modal-success" role="status" tabindex="-1" #successEl>
+              <div class="success-icon-wrap">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
-              <strong>وصلت رسالتك، شكراً.</strong>
-              <p>سأراجع التفاصيل وأتواصل معك قريباً. متحمس للتعرف على مشروعك.</p>
-              <button type="button" class="btn btn-ghost" style="color: var(--fg); border-color: var(--border);" (click)="resetForm()">
-                إرسال رسالة أخرى
-              </button>
+              <strong>تم إرسال طلبك بنجاح!</strong>
+              <p>وصل طلب الاستشارة، سأراجع تفاصيل مشروعك وأتواصل معك قريباً.</p>
+              <button type="button" class="btn btn-primary" (click)="closeModal()">إغلاق</button>
             </div>
 
           } @else {
             <!-- Form -->
-            <form (ngSubmit)="submitForm()" novalidate aria-label="نموذج حجز الاستشارة">
+            <form class="modal-form" (ngSubmit)="submitForm()" novalidate aria-label="نموذج حجز الاستشارة">
               <div class="form-grid">
 
                 <!-- Name -->
                 <div class="field">
-                  <label for="name">الاسم الكريم</label>
+                  <label for="c-name">الاسم <span class="req">*</span></label>
                   <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    autocomplete="name"
-                    [(ngModel)]="form.name"
-                    (ngModelChange)="clearError('name')"
-                    placeholder="مثال: خالد العتيبي"
+                    id="c-name" name="name" type="text" autocomplete="name"
+                    [(ngModel)]="form.name" (ngModelChange)="clearError('name')"
+                    placeholder="محمد أحمد"
                     [attr.aria-invalid]="!!errors()['name'] || null"
-                    [attr.aria-describedby]="errors()['name'] ? 'name-error' : null"
                   />
                   @if (errors()['name']) {
-                    <span class="error-msg" id="name-error" role="alert">{{ errors()['name'] }}</span>
+                    <span class="error-msg" role="alert">{{ errors()['name'] }}</span>
+                  }
+                </div>
+
+                <!-- Phone -->
+                <div class="field">
+                  <label for="c-phone">رقم الجوال <span class="req">*</span></label>
+                  <input
+                    id="c-phone" name="phone" type="tel" autocomplete="tel"
+                    inputmode="tel" dir="ltr"
+                    [(ngModel)]="form.phone" (ngModelChange)="clearError('phone')"
+                    placeholder="05xxxxxxxx"
+                    [attr.aria-invalid]="!!errors()['phone'] || null"
+                  />
+                  @if (errors()['phone']) {
+                    <span class="error-msg" role="alert">{{ errors()['phone'] }}</span>
                   }
                 </div>
 
                 <!-- Email -->
                 <div class="field">
-                  <label for="email">البريد الإلكتروني</label>
+                  <label for="c-email">البريد الإلكتروني <span class="req">*</span></label>
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autocomplete="email"
-                    inputmode="email"
-                    dir="ltr"
-                    [(ngModel)]="form.email"
-                    (ngModelChange)="clearError('email')"
-                    placeholder="name@company.com"
+                    id="c-email" name="email" type="email" autocomplete="email"
+                    inputmode="email" dir="ltr"
+                    [(ngModel)]="form.email" (ngModelChange)="clearError('email')"
+                    placeholder="name@example.com"
                     [attr.aria-invalid]="!!errors()['email'] || null"
-                    [attr.aria-describedby]="errors()['email'] ? 'email-error' : null"
                   />
                   @if (errors()['email']) {
-                    <span class="error-msg" id="email-error" role="alert">{{ errors()['email'] }}</span>
+                    <span class="error-msg" role="alert">{{ errors()['email'] }}</span>
                   }
                 </div>
 
-                <!-- Company (optional) -->
+                <!-- Project Name -->
+                <div class="field">
+                  <label for="c-project">اسم المشروع <span class="req">*</span></label>
+                  <input
+                    id="c-project" name="projectName" type="text"
+                    [(ngModel)]="form.projectName" (ngModelChange)="clearError('projectName')"
+                    placeholder="متجر إلكتروني / شركة / ..."
+                    [attr.aria-invalid]="!!errors()['projectName'] || null"
+                  />
+                  @if (errors()['projectName']) {
+                    <span class="error-msg" role="alert">{{ errors()['projectName'] }}</span>
+                  }
+                </div>
+
+                <!-- Project Field -->
+                <div class="field">
+                  <label for="c-field">مجال المشروع <span class="req">*</span></label>
+                  <input
+                    id="c-field" name="projectField" type="text"
+                    [(ngModel)]="form.projectField" (ngModelChange)="clearError('projectField')"
+                    placeholder="عقار / تجارة إلكترونية / خدمات / ..."
+                    [attr.aria-invalid]="!!errors()['projectField'] || null"
+                  />
+                  @if (errors()['projectField']) {
+                    <span class="error-msg" role="alert">{{ errors()['projectField'] }}</span>
+                  }
+                </div>
+
+                <!-- City -->
+                <div class="field">
+                  <label for="c-city">المدينة <span class="req">*</span></label>
+                  <input
+                    id="c-city" name="city" type="text" autocomplete="address-level2"
+                    [(ngModel)]="form.city" (ngModelChange)="clearError('city')"
+                    placeholder="الرياض / جدة / ..."
+                    [attr.aria-invalid]="!!errors()['city'] || null"
+                  />
+                  @if (errors()['city']) {
+                    <span class="error-msg" role="alert">{{ errors()['city'] }}</span>
+                  }
+                </div>
+
+                <!-- Website (optional) -->
                 <div class="field full">
-                  <label for="company">
-                    اسم المشروع أو الشركة
-                    <span style="color: var(--muted); font-weight: 400;">(اختياري)</span>
+                  <label for="c-website">
+                    رابط الموقع / المتجر
+                    <span class="optional">(اختياري)</span>
                   </label>
                   <input
-                    id="company"
-                    name="organization"
-                    type="text"
-                    autocomplete="organization"
-                    [(ngModel)]="form.company"
-                    placeholder="ما اسم المشروع الذي تعمل عليه؟"
+                    id="c-website" name="website" type="url"
+                    inputmode="url" dir="ltr"
+                    [(ngModel)]="form.website"
+                    placeholder="https://example.com"
                   />
                 </div>
 
-                <!-- Message -->
+                <!-- Problem -->
                 <div class="field full">
-                  <label for="message">كيف يمكنني مساعدتك؟</label>
+                  <label for="c-problem">ما المشكلة التي تريد حلها؟ <span class="req">*</span></label>
                   <textarea
-                    id="message"
-                    name="message"
-                    [(ngModel)]="form.message"
-                    (ngModelChange)="clearError('message')"
-                    placeholder="حدثني عن التحدي أو الفرصة التي أمامك..."
-                    [attr.aria-invalid]="!!errors()['message'] || null"
-                    [attr.aria-describedby]="errors()['message'] ? 'message-error' : null"
+                    id="c-problem" name="problem"
+                    [(ngModel)]="form.problem" (ngModelChange)="clearError('problem')"
+                    placeholder="اشرح التحدي التسويقي الذي تواجهه..."
+                    [attr.aria-invalid]="!!errors()['problem'] || null"
                   ></textarea>
-                  @if (errors()['message']) {
-                    <span class="error-msg" id="message-error" role="alert">{{ errors()['message'] }}</span>
+                  @if (errors()['problem']) {
+                    <span class="error-msg" role="alert">{{ errors()['problem'] }}</span>
+                  }
+                </div>
+
+                <!-- Goal -->
+                <div class="field full">
+                  <label for="c-goal">ما الهدف الذي تريد الوصول إليه؟ <span class="req">*</span></label>
+                  <textarea
+                    id="c-goal" name="goal"
+                    [(ngModel)]="form.goal" (ngModelChange)="clearError('goal')"
+                    placeholder="حدد الهدف الذي تريد تحقيقه..."
+                    [attr.aria-invalid]="!!errors()['goal'] || null"
+                  ></textarea>
+                  @if (errors()['goal']) {
+                    <span class="error-msg" role="alert">{{ errors()['goal'] }}</span>
+                  }
+                </div>
+
+                <!-- Captcha -->
+                <div class="field full captcha-field">
+                  <div class="captcha-row">
+                    <div class="captcha-box" aria-label="كود التحقق">
+                      <span class="captcha-num">{{ captchaA }}</span>
+                      <span class="captcha-op">+</span>
+                      <span class="captcha-num">{{ captchaB }}</span>
+                      <span class="captcha-op">=</span>
+                      <span class="captcha-q">؟</span>
+                    </div>
+                    <div class="captcha-input-wrap">
+                      <label for="c-captcha">اكتب الناتج للتحقق <span class="req">*</span></label>
+                      <input
+                        id="c-captcha" name="captchaAnswer" type="number"
+                        inputmode="numeric" dir="ltr"
+                        [(ngModel)]="form.captchaAnswer" (ngModelChange)="clearError('captchaAnswer')"
+                        placeholder="أدخل الإجابة"
+                        [attr.aria-invalid]="!!errors()['captchaAnswer'] || null"
+                      />
+                    </div>
+                  </div>
+                  @if (errors()['captchaAnswer']) {
+                    <span class="error-msg" role="alert">{{ errors()['captchaAnswer'] }}</span>
                   }
                 </div>
 
               </div>
 
               <div class="form-footer">
-                <span class="form-hint" id="form-hint">لن تستخدم بياناتك إلا للتواصل بخصوص رسالتك.</span>
-                <button type="submit" class="btn btn-primary" aria-describedby="form-hint">
-                  أرسل الرسالة
+                <span class="form-hint">لن تُستخدم بياناتك إلا للتواصل بخصوص الاستشارة.</span>
+                <button type="submit" class="btn btn-primary" id="submit-consult-btn">
+                  إرسال الطلب
                   <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 </button>
               </div>
+
             </form>
           }
 
         </div>
       </div>
-    </section>
+    }
   `,
 })
-export class ContactComponent {
+export class ContactComponent implements OnInit {
   protected data = inject(PortfolioDataService);
+  private scroll = inject(ScrollService);
 
   @ViewChild('successEl') successEl!: ElementRef<HTMLDivElement>;
+  @ViewChild('modalCard') modalCard!: ElementRef<HTMLDivElement>;
 
-  protected form: FormValues = { name: '', email: '', company: '', message: '' };
-  protected errors = signal<FormErrors>({});
+  protected modalOpen = signal(false);
   protected submitted = signal(false);
+  protected errors = signal<FormErrors>({});
 
-  protected clearError(field: keyof FormValues): void {
+  protected captchaA = 0;
+  protected captchaB = 0;
+  private captchaAnswer = 0;
+
+  protected form: ConsultForm = this.emptyForm();
+
+  ngOnInit(): void {
+    this.generateCaptcha();
+  }
+
+  private emptyForm(): ConsultForm {
+    return {
+      name: '', phone: '', email: '', projectName: '',
+      projectField: '', city: '', website: '',
+      problem: '', goal: '', captchaAnswer: '',
+    };
+  }
+
+  private generateCaptcha(): void {
+    this.captchaA = Math.floor(Math.random() * 9) + 1;
+    this.captchaB = Math.floor(Math.random() * 9) + 1;
+    this.captchaAnswer = this.captchaA + this.captchaB;
+  }
+
+  protected openModal(): void {
+    this.modalOpen.set(true);
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      document.getElementById('c-name')?.focus();
+    }, 100);
+  }
+
+  protected closeModal(): void {
+    this.modalOpen.set(false);
+    document.body.style.overflow = '';
+    if (this.submitted()) {
+      this.submitted.set(false);
+      this.form = this.emptyForm();
+      this.errors.set({});
+      this.generateCaptcha();
+    }
+  }
+
+  protected onOverlayClick(e: MouseEvent): void {
+    const card = this.modalCard?.nativeElement;
+    if (card && !card.contains(e.target as Node)) {
+      this.closeModal();
+    }
+  }
+
+  protected clearError(field: keyof ConsultForm): void {
     const current = this.errors();
     if (current[field]) {
       this.errors.update((e) => ({ ...e, [field]: undefined }));
@@ -174,25 +341,37 @@ export class ContactComponent {
 
   protected submitForm(): void {
     const next: FormErrors = {};
+
     if (this.form.name.trim().length < 2) next['name'] = 'اكتب اسمك الكريم';
-    if (!this.form.email.trim() || !/^\S+@\S+\.\S+$/.test(this.form.email)) next['email'] = 'تحقق من البريد الإلكتروني';
-    if (this.form.message.trim().length < 10) next['message'] = 'أخبرني قليلاً عن مشروعك (١٠ أحرف على الأقل)';
+    if (!this.form.phone.trim() || !/^05\d{8}$/.test(this.form.phone.trim()))
+      next['phone'] = 'أدخل رقم جوال سعودي صحيح (05xxxxxxxx)';
+    if (!this.form.email.trim() || !/^\S+@\S+\.\S+$/.test(this.form.email))
+      next['email'] = 'تحقق من البريد الإلكتروني';
+    if (this.form.projectName.trim().length < 2) next['projectName'] = 'اكتب اسم مشروعك';
+    if (this.form.projectField.trim().length < 2) next['projectField'] = 'حدد مجال مشروعك';
+    if (this.form.city.trim().length < 2) next['city'] = 'اكتب مدينتك';
+    if (this.form.problem.trim().length < 10) next['problem'] = 'اشرح المشكلة بشكل أوضح (١٠ أحرف على الأقل)';
+    if (this.form.goal.trim().length < 10) next['goal'] = 'حدد هدفك بشكل أوضح (١٠ أحرف على الأقل)';
+
+    const captchaInput = parseInt(this.form.captchaAnswer, 10);
+    if (isNaN(captchaInput) || captchaInput !== this.captchaAnswer)
+      next['captchaAnswer'] = 'الإجابة غير صحيحة، تحقق من العملية الحسابية';
 
     this.errors.set(next);
 
     if (Object.keys(next).length > 0) {
-      const firstKey = Object.keys(next)[0] as keyof FormValues;
-      requestAnimationFrame(() => document.getElementById(firstKey)?.focus());
+      const firstKey = Object.keys(next)[0] as keyof ConsultForm;
+      const idMap: Record<keyof ConsultForm, string> = {
+        name: 'c-name', phone: 'c-phone', email: 'c-email',
+        projectName: 'c-project', projectField: 'c-field',
+        city: 'c-city', website: 'c-website',
+        problem: 'c-problem', goal: 'c-goal', captchaAnswer: 'c-captcha',
+      };
+      requestAnimationFrame(() => document.getElementById(idMap[firstKey])?.focus());
       return;
     }
 
     this.submitted.set(true);
-    this.form = { name: '', email: '', company: '', message: '' };
     requestAnimationFrame(() => this.successEl?.nativeElement?.focus());
-  }
-
-  protected resetForm(): void {
-    this.submitted.set(false);
-    this.errors.set({});
   }
 }

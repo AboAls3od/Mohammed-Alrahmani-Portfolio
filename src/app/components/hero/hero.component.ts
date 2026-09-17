@@ -14,19 +14,19 @@ import { RevealDirective } from '../../directives/reveal.directive';
         <div class="hero-copy" appReveal [appReveal]="0">
           <div class="eyebrow">
             <span class="eyebrow-line"></span>
-            استشارات تسويقية وتطوير أعمال
+            خبير تسويق وتطوير أعمال
           </div>
-          <h1>أوصل مشروعك إلى <em>العميل الصح</em>.</h1>
+          <h1>محمد الرحماني | <em>خبير تسويق</em> وتطوير أعمال</h1>
           <p class="hero-description">
-            أساعد المشاريع والمتاجر والشركات في السعودية على بناء حضور أوضح، مبيعات أفضل، ونمو يمكن أن تراه في الأرقام.
+            أساعد المشاريع والمتاجر على الوصول إلى عملائها وزيادة مبيعاتها
           </p>
           <div class="hero-actions">
             <button class="btn btn-primary" (click)="nav('contact')">
-              ابدأ محادثة عن مشروعك
+              اطلب استشارة
               <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
             </button>
             <button class="btn btn-ghost" (click)="nav('services')">
-              اكتشف كيف أساعدك
+              تعرف على خدماتي
               <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
           </div>
@@ -46,7 +46,7 @@ import { RevealDirective } from '../../directives/reveal.directive';
           <span class="art-label">MARKET / MOMENTUM / MEANING</span>
           <div class="hero-note">
             <span class="dot"></span>
-            نمو محسوب، لا ضجيج
+            تسويق يصنع نتائج حقيقية
           </div>
         </div>
 

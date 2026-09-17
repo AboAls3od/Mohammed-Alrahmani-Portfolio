@@ -11,7 +11,7 @@ import { ScrollService } from '../../services/scroll.service';
           <span class="brand-mark">م</span>
           <span>محمد الرحماني</span>
         </button>
-        <small>تسويق يفهم السوق. وأعمال تتحرك للأمام.</small>
+        <small>تسويق | تطوير أعمال | استشارات</small>
         <small>© {{ year }} جميع الحقوق محفوظة</small>
       </div>
     </footer>

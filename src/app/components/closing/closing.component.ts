@@ -9,13 +9,18 @@ import { RevealDirective } from '../../directives/reveal.directive';
   template: `
     <section class="closing">
       <div class="shell" appReveal>
-        <span class="section-kicker">جاهز للخطوة التالية؟</span>
-        <h2>لنصنع نمواً يراه <span>العميل</span> وتشعر به الأرقام.</h2>
-        <p>كل مشروع كبير بدأ بمحادثة صريحة عن أين هو، وإلى أين يريد أن يصل.</p>
+        <span class="section-kicker">مشروعك يحتاج خطة .. وليس مجرد إعلان</span>
+        <h2>إذا كنت تريد تطوير تسويق مشروعك .. الوصول إلى عملاء جدد .. أو اكتشاف الفرص التي يمكن أن تزيد <span>مبيعاتك</span> .. تواصل معي</h2>
+        <p>لا تنتظر الإذن لتحقيق النجاح. ابدأ الآن بخطوة صغيرة — استشارة مجانية.</p>
         <button class="btn btn-primary" (click)="nav('contact')">
-          احجز استشارتك المجانية
+          ابدأ من هنا — اطلب استشارة
           <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
         </button>
+        <div class="closing-author">
+          <span>محمد الرحماني</span>
+          <span class="closing-sep">|</span>
+          <span>تسويق | تطوير أعمال | استشارات</span>
+        </div>
       </div>
     </section>
   `,

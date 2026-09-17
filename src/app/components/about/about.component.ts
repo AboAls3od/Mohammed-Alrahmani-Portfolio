@@ -12,33 +12,34 @@ import { RevealDirective } from '../../directives/reveal.directive';
         <!-- Section Head -->
         <div class="section-head" appReveal>
           <div>
-            <span class="section-kicker">٠١ / عن الشراكة</span>
-            <h2 class="section-title">التسويق الجيد يبدأ بسؤال تجاري واضح.</h2>
+            <span class="section-kicker">٠١ / من أنا؟</span>
+            <h2 class="section-title">محمد الرحماني .. خبير ومتخصص في التسويق وتطوير الأعمال.</h2>
           </div>
-          <p class="section-desc">قبل أن نبحث عن المزيد من الظهور، نفهم ما الذي يجب أن ينمو فعلاً.</p>
+          <p class="section-desc">أعمل على ربط التسويق بالمبيعات لتحقيق نتائج حقيقية وقابلة للقياس.</p>
         </div>
 
         <!-- Intro Grid -->
         <div class="intro-grid">
           <div class="intro-copy" appReveal [appReveal]="0">
-            <p>أنا محمد الرحماني، مستشار تسويق وتطوير أعمال.</p>
-            <p>أعمل مع أصحاب المشاريع والفرق الطموحة على تحويل التسويق من نشاط متفرق إلى نظام يخدم المبيعات، ويصنع ثقة حقيقية مع العملاء.</p>
-            <p>أؤمن أن أفضل خطة هي التي تفهم طبيعة السوق السعودي، وتحترم عقل العميل، وتمنح صاحب المشروع خطوات يعرف لماذا يقوم بها وماذا ينتظر منها.</p>
+            <p>أنا محمد الرحماني .. خبير ومتخصص في التسويق وتطوير الأعمال.</p>
+            <p>لدي خبرة في العمل مع المشاريع والشركات والمتاجر في مجالات التسويق الرقمي .. صناعة المحتوى .. الإعلانات .. توليد العملاء .. المبيعات .. وتطوير الأعمال.</p>
+            <p>أؤمن أن التسويق الناجح لا يعتمد فقط على الإعلان .. بل يبدأ من فهم العميل .. ومعرفة احتياجه .. وتقديم العرض المناسب له في الوقت والمكان المناسب.</p>
+            <p>أعمل على ربط التسويق بالمبيعات .. بحيث لا يكون الهدف مجرد زيادة المشاهدات أو المتابعين .. وإنما الوصول إلى عملاء وفرص ومبيعات حقيقية.</p>
           </div>
 
           <aside class="intro-aside" appReveal [appReveal]="200">
             <div class="portrait-card">
-              <img src="assets/portrait.png" alt="محمد الرحماني — مستشار تسويق وتطوير أعمال" loading="lazy" />
+              <img src="assets/portrait.png" alt="محمد الرحماني — خبير تسويق وتطوير أعمال" loading="lazy" />
               <div class="portrait-badge">
                 <strong>محمد الرحماني</strong>
-                <span>تسويق | تطوير أعمال</span>
+                <span>تسويق | تطوير أعمال | استشارات</span>
               </div>
             </div>
             <div class="aside-label">
               <span>فلسفة العمل</span>
               <span>٠٠١</span>
             </div>
-            <p class="aside-quote">«وضوح أكثر.<br />حركة أذكى.<br />نتيجة تُقاس.»</p>
+            <p class="aside-quote">«لا تنتظر الإذن<br />لتحقيق النجاح»</p>
             <div class="signature">
               <span class="signature-line"></span>
               محمد الرحماني
