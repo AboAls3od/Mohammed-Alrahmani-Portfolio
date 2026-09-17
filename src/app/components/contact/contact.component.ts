@@ -371,7 +371,39 @@ export class ContactComponent implements OnInit {
       return;
     }
 
+    // ✅ بناء رسالة الواتساب
+    this.openWhatsApp();
+
     this.submitted.set(true);
     requestAnimationFrame(() => this.successEl?.nativeElement?.focus());
+  }
+
+  private openWhatsApp(): void {
+    const f = this.form;
+    const lines = [
+      `🟥 *طلب استشارة تسويقية*`,
+      ``,
+      `👤 *الاسم:* ${f.name.trim()}`,
+      `📱 *الجوال:* ${f.phone.trim()}`,
+      `📧 *البريد:* ${f.email.trim()}`,
+      ``,
+      `🏢 *اسم المشروع:* ${f.projectName.trim()}`,
+      `📂 *المجال:* ${f.projectField.trim()}`,
+      `📍 *المدينة:* ${f.city.trim()}`,
+      f.website.trim() ? `🔗 *الموقع:* ${f.website.trim()}` : null,
+      ``,
+      `❓ *المشكلة:*`,
+      f.problem.trim(),
+      ``,
+      `🎯 *الهدف:*`,
+      f.goal.trim(),
+    ]
+    .filter((l) => l !== null)
+    .join('\n');
+
+    // رقم واتساب محمد الرحماني — عدّله حسب رقمك الحقيقي
+    const phone = '966500000000'; // ← ضع رقم الواتساب هنا بدون + (مثال: 966512345678)
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(lines)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 }
