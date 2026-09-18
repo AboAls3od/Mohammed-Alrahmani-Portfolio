@@ -20,6 +20,9 @@ import { RevealDirective } from '../../directives/reveal.directive';
           <p class="hero-description">
             أساعد المشاريع والمتاجر على الوصول إلى عملائها وزيادة مبيعاتها
           </p>
+          <p class="hero-subtext">
+            متخصص في التسويق وتطوير الأعمال .. أعمل على مساعدة أصحاب المشاريع والمتاجر والشركات في بناء استراتيجيات تسويقية عملية .. جذب العملاء .. تطوير المبيعات .. وتحويل الفرص التسويقية إلى نتائج قابلة للقياس
+          </p>
           <div class="hero-actions">
             <button class="btn btn-primary" (click)="nav('contact')">
               اطلب استشارة

@@ -33,21 +33,21 @@ type FormErrors = Partial<Record<keyof ConsultForm, string>>;
         <div class="section-head" appReveal>
           <div>
             <span class="section-kicker">٠٦ / الاستشارة</span>
-            <h2 class="section-title">لديك مشروع وتحتاج رأياً تسويقياً؟</h2>
+            <h2 class="section-title">لديك مشروع وتحتاج رأيا تسويقيا ؟</h2>
           </div>
           <p class="section-desc">
-            إذا كنت محتاراً في طريقة التسويق، أو لا تعرف من أين تبدأ، أو تنفق على الإعلانات دون نتائج واضحة — يمكنني مساعدتك.
+            إذا كنت محتار في طريقة التسويق .. أو لا تعرف من أين تبدأ .. أو تنفق على الإعلانات دون نتائج واضحة .. يمكنني مساعدتك في تحليل وضعك وتحديد الخطوات التي تحتاجها
           </p>
         </div>
 
         <!-- CTA Card -->
         <div class="consult-cta-card" appReveal [appReveal]="100">
           <div class="consult-cta-text">
-            <h3>احجز استشارتك الآن مجاناً</h3>
+            <h3>احجز استشارتك الآن مجانا</h3>
             <p>أحلل وضعك وأحدد الخطوات التي تحتاجها</p>
           </div>
           <button class="btn btn-primary btn-lg" id="open-consult-btn" (click)="openModal()">
-            احجز استشارتك الآن مجاناً
+            احجز استشارتك الآن مجانا
             <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
           </button>
         </div>
@@ -90,7 +90,7 @@ type FormErrors = Partial<Record<keyof ConsultForm, string>>;
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
               <strong>تم إرسال طلبك بنجاح!</strong>
-              <p>وصل طلب الاستشارة، سأراجع تفاصيل مشروعك وأتواصل معك قريباً.</p>
+              <p>تم إرسال تفاصيل استشارتك إلى البريد الإلكتروني (gh17mr&#64;gmail.com)، سأراجع تفاصيل مشروعك وأتواصل معك قريباً.</p>
               <button type="button" class="btn btn-primary" (click)="closeModal()">إغلاق</button>
             </div>
 
@@ -231,19 +231,15 @@ type FormErrors = Partial<Record<keyof ConsultForm, string>>;
                 <div class="field full captcha-field">
                   <div class="captcha-row">
                     <div class="captcha-box" aria-label="كود التحقق">
-                      <span class="captcha-num">{{ captchaA }}</span>
-                      <span class="captcha-op">+</span>
-                      <span class="captcha-num">{{ captchaB }}</span>
-                      <span class="captcha-op">=</span>
-                      <span class="captcha-q">؟</span>
+                      <span class="captcha-num" style="letter-spacing: 6px; font-size: 26px;">{{ captchaCode }}</span>
                     </div>
                     <div class="captcha-input-wrap">
-                      <label for="c-captcha">اكتب الناتج للتحقق <span class="req">*</span></label>
+                      <label for="c-captcha">اكتب الرقم الظاهر: ( كود للتحقق من الاستخدام البشري ) <span class="req">*</span></label>
                       <input
-                        id="c-captcha" name="captchaAnswer" type="number"
+                        id="c-captcha" name="captchaAnswer" type="text"
                         inputmode="numeric" dir="ltr"
                         [(ngModel)]="form.captchaAnswer" (ngModelChange)="clearError('captchaAnswer')"
-                        placeholder="أدخل الإجابة"
+                        placeholder="أدخل الكود الظاهر"
                         [attr.aria-invalid]="!!errors()['captchaAnswer'] || null"
                       />
                     </div>
@@ -255,11 +251,26 @@ type FormErrors = Partial<Record<keyof ConsultForm, string>>;
 
               </div>
 
+              @if (submitError()) {
+                <div class="submit-error-banner" role="alert">
+                  <p>{{ submitError() }}</p>
+                  <a [href]="fallbackMailtoUrl()" class="btn-email-direct">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    فتح البريد وإرسال التفاصيل مباشرة
+                  </a>
+                </div>
+              }
+
               <div class="form-footer">
-                <span class="form-hint">لن تُستخدم بياناتك إلا للتواصل بخصوص الاستشارة.</span>
-                <button type="submit" class="btn btn-primary" id="submit-consult-btn">
-                  إرسال الطلب
-                  <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <span class="form-hint">لن تُستخدم بياناتك إلا للتواصل بخصوص الاستشارة. سيتم إرسال الطلب مباشرة إلى البريد الإلكتروني.</span>
+                <button type="submit" class="btn btn-primary" id="submit-consult-btn" [disabled]="isSubmitting()">
+                  @if (isSubmitting()) {
+                    <span class="btn-spinner" aria-hidden="true"></span>
+                    <span>جاري الإرسال...</span>
+                  } @else {
+                    <span>إرسال الطلب</span>
+                    <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  }
                 </button>
               </div>
 
@@ -280,11 +291,11 @@ export class ContactComponent implements OnInit {
 
   protected modalOpen = signal(false);
   protected submitted = signal(false);
+  protected isSubmitting = signal(false);
+  protected submitError = signal<string | null>(null);
   protected errors = signal<FormErrors>({});
 
-  protected captchaA = 0;
-  protected captchaB = 0;
-  private captchaAnswer = 0;
+  protected captchaCode = '';
 
   protected form: ConsultForm = this.emptyForm();
 
@@ -301,9 +312,7 @@ export class ContactComponent implements OnInit {
   }
 
   private generateCaptcha(): void {
-    this.captchaA = Math.floor(Math.random() * 9) + 1;
-    this.captchaB = Math.floor(Math.random() * 9) + 1;
-    this.captchaAnswer = this.captchaA + this.captchaB;
+    this.captchaCode = Math.floor(1000 + Math.random() * 9000).toString();
   }
 
   protected openModal(): void {
@@ -321,6 +330,7 @@ export class ContactComponent implements OnInit {
       this.submitted.set(false);
       this.form = this.emptyForm();
       this.errors.set({});
+      this.submitError.set(null);
       this.generateCaptcha();
     }
   }
@@ -339,7 +349,9 @@ export class ContactComponent implements OnInit {
     }
   }
 
-  protected submitForm(): void {
+  protected async submitForm(): Promise<void> {
+    if (this.isSubmitting()) return;
+
     const next: FormErrors = {};
 
     if (this.form.name.trim().length < 2) next['name'] = 'اكتب اسمك الكريم';
@@ -353,9 +365,9 @@ export class ContactComponent implements OnInit {
     if (this.form.problem.trim().length < 10) next['problem'] = 'اشرح المشكلة بشكل أوضح (١٠ أحرف على الأقل)';
     if (this.form.goal.trim().length < 10) next['goal'] = 'حدد هدفك بشكل أوضح (١٠ أحرف على الأقل)';
 
-    const captchaInput = parseInt(this.form.captchaAnswer, 10);
-    if (isNaN(captchaInput) || captchaInput !== this.captchaAnswer)
-      next['captchaAnswer'] = 'الإجابة غير صحيحة، تحقق من العملية الحسابية';
+    if (!this.form.captchaAnswer.trim() || this.form.captchaAnswer.trim() !== this.captchaCode) {
+      next['captchaAnswer'] = 'أدخل الكود الظاهر للتحقق بشكل صحيح';
+    }
 
     this.errors.set(next);
 
@@ -371,68 +383,63 @@ export class ContactComponent implements OnInit {
       return;
     }
 
-    // ✅ 1. حفظ في Google Sheets (في الخلفية)
-    this.saveToSheet();
-
-    // ✅ 2. فتح واتساب مع البيانات
-    this.openWhatsApp();
-
-    this.submitted.set(true);
-    requestAnimationFrame(() => this.successEl?.nativeElement?.focus());
-  }
-
-  private saveToSheet(): void {
-    // ← ضع رابط الـ Web App من Google Apps Script هنا
-    const SHEET_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
-
-    if (SHEET_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return; // تخطَّ إذا لم يُضبط بعد
+    this.isSubmitting.set(true);
+    this.submitError.set(null);
 
     const payload = {
-      name:         this.form.name.trim(),
-      phone:        this.form.phone.trim(),
-      email:        this.form.email.trim(),
-      projectName:  this.form.projectName.trim(),
-      projectField: this.form.projectField.trim(),
-      city:         this.form.city.trim(),
-      website:      this.form.website.trim(),
-      problem:      this.form.problem.trim(),
-      goal:         this.form.goal.trim(),
+      _subject: `طلب استشارة تسويقية جديد من ${this.form.name.trim()} (${this.form.projectName.trim()})`,
+      _replyto: this.form.email.trim(),
+      _template: 'table',
+      _captcha: 'false',
+      'الاسم الكريم': this.form.name.trim(),
+      'رقم الجوال': this.form.phone.trim(),
+      'البريد الإلكتروني للعميل': this.form.email.trim(),
+      'اسم المشروع': this.form.projectName.trim(),
+      'مجال المشروع': this.form.projectField.trim(),
+      'المدينة': this.form.city.trim(),
+      'رابط الموقع أو المتجر': this.form.website.trim() || 'غير محدد',
+      'المشكلة التسويقية المراد حلها': this.form.problem.trim(),
+      'الهدف المطلوب تحقيقه': this.form.goal.trim(),
     };
 
-    fetch(SHEET_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    }).catch(() => {
-      // خطأ صامت — لا يؤثر على تجربة المستخدم
-    });
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/gh17mr@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`تعذر الإرسال: رمز ${response.status}`);
+      }
+
+      this.submitted.set(true);
+      requestAnimationFrame(() => this.successEl?.nativeElement?.focus());
+    } catch (err) {
+      console.error('Email submission error:', err);
+      this.submitError.set('تعذر إرسال الطلب تلقائياً، يرجى إعادة المحاولة أو الضغط أدناه لإرسال التفاصيل مباشرة عبر البريد الإلكتروني.');
+    } finally {
+      this.isSubmitting.set(false);
+    }
   }
 
-  private openWhatsApp(): void {
+  protected fallbackMailtoUrl(): string {
     const f = this.form;
-    const lines = [
-      `🟥 *طلب استشارة تسويقية*`,
-      ``,
-      `👤 *الاسم:* ${f.name.trim()}`,
-      `📱 *الجوال:* ${f.phone.trim()}`,
-      `📧 *البريد:* ${f.email.trim()}`,
-      ``,
-      `🏢 *اسم المشروع:* ${f.projectName.trim()}`,
-      `📂 *المجال:* ${f.projectField.trim()}`,
-      `📍 *المدينة:* ${f.city.trim()}`,
-      f.website.trim() ? `🔗 *الموقع:* ${f.website.trim()}` : null,
-      ``,
-      `❓ *المشكلة:*`,
-      f.problem.trim(),
-      ``,
-      `🎯 *الهدف:*`,
-      f.goal.trim(),
-    ]
-    .filter((l) => l !== null)
-    .join('\n');
-
-    // ← ضع رقم واتساب محمد الرحماني هنا بدون + (مثال: 966512345678)
-    const phone = '966500000000';
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(lines)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    const subject = encodeURIComponent(`طلب استشارة تسويقية: ${f.name.trim()} - ${f.projectName.trim()}`);
+    const body = encodeURIComponent(
+      `طلب استشارة تسويقية:\n\n` +
+      `الاسم: ${f.name.trim()}\n` +
+      `رقم الجوال: ${f.phone.trim()}\n` +
+      `البريد الإلكتروني: ${f.email.trim()}\n` +
+      `اسم المشروع: ${f.projectName.trim()}\n` +
+      `مجال المشروع: ${f.projectField.trim()}\n` +
+      `المدينة: ${f.city.trim()}\n` +
+      (f.website.trim() ? `رابط الموقع: ${f.website.trim()}\n` : '') +
+      `\nالمشكلة التسويقية:\n${f.problem.trim()}\n\nالهدف المطلوب:\n${f.goal.trim()}`
+    );
+    return `mailto:gh17mr@gmail.com?subject=${subject}&body=${body}`;
   }
 }

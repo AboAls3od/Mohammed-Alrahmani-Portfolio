@@ -12,6 +12,7 @@ import { ScrollService } from '../../services/scroll.service';
           <span>محمد الرحماني</span>
         </button>
         <small>تسويق | تطوير أعمال | استشارات</small>
+        <small>لا تنتظر الاذن لتحقيق النجاح</small>
         <small>© {{ year }} جميع الحقوق محفوظة</small>
       </div>
     </footer>

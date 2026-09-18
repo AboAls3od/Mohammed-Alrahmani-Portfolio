@@ -61,7 +61,7 @@ import { FooterComponent } from './components/footer/footer.component';
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private scroll = inject(ScrollService);
   private sectionObserver!: IntersectionObserver;
-  private readonly sectionIds = ['about', 'services', 'expertise', 'method', 'journal', 'contact'];
+  private readonly sectionIds = ['about', 'services', 'why-me', 'expertise', 'journal', 'contact'];
 
   @HostListener('document:keydown.escape')
   onEscape() {

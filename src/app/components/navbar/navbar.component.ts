@@ -33,7 +33,7 @@ import { ScrollService } from '../../services/scroll.service';
 
         <!-- Desktop CTA -->
         <button class="header-cta" (click)="navigate('contact')">
-          استشارة مجانية
+          اطلب استشارة
           <svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
         </button>
 
@@ -70,7 +70,7 @@ import { ScrollService } from '../../services/scroll.service';
       }
 
       <button class="btn btn-primary" style="margin-top: 28px; padding: 16px 36px;" (click)="navigate('contact')">
-        استشارة مجانية
+        اطلب استشارة
       </button>
     </div>
   `,
@@ -80,10 +80,12 @@ export class NavbarComponent {
   protected menuOpen = signal(false);
 
   protected readonly navLinks = [
-    { id: 'about',     label: 'عنّي' },
-    { id: 'services',  label: 'الخدمات' },
-    { id: 'expertise', label: 'الخبرة' },
-    { id: 'contact',   label: 'تواصل' },
+    { id: 'about',     label: 'من أنا ؟' },
+    { id: 'services',  label: 'ماذا أقدم ؟' },
+    { id: 'why-me',    label: 'لماذا معي ؟' },
+    { id: 'expertise', label: 'الخبرة والمشاريع' },
+    { id: 'journal',   label: 'المحتوى' },
+    { id: 'contact',   label: 'الاستشارة' },
   ];
 
   @HostListener('document:keydown.escape')

@@ -13,10 +13,10 @@ import { PortfolioDataService } from '../../services/portfolio-data.service';
 
         <div class="section-head" appReveal>
           <div>
-            <span class="section-kicker">٠٢ / ماذا أقدم؟</span>
-            <h2 class="section-title">خدمات عملية تصل بمشروعك إلى نتائج.</h2>
+            <span class="section-kicker">٠٢ / الخدمات</span>
+            <h2 class="section-title">ماذا أقدم ؟</h2>
           </div>
-          <p class="section-desc">أعمل على مساعدة أصحاب المشاريع والمتاجر والشركات في بناء استراتيجيات تسويقية عملية.</p>
+          <p class="section-desc">أعمل على مساعدة أصحاب المشاريع والمتاجر والشركات في بناء استراتيجيات تسويقية عملية وتطوير المبيعات وتحقيق نتائج قابلة للقياس.</p>
         </div>
 
         <!-- Services Grid (3×2) -->
